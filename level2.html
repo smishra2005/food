@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Food Game</title>
+    <style>
+        h2, #food-name {
+    color: white;
+}
+
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: url('https://t4.ftcdn.net/jpg/04/43/37/07/360_F_443370711_sqHRnSIQovW6uyQ5ZwDpd4kjCG8Q6swm.jpg') no-repeat center/cover;
+            margin: 0;
+            padding: 0;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin: 20px;
+        }
+
+        .food-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .food {
+            width: 25vw;
+            max-width: 160px;
+            height: auto;
+            cursor: grab;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .plate-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        #food-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .plate {
+            width: 85vw;
+            max-width: 600px;
+            height: 45vw;
+            max-height: 220px;
+            background: url('https://t3.ftcdn.net/jpg/10/04/04/82/360_F_1004048266_zikRVy2cf5NR4DQms796r6tX03XVhnsP.jpg') no-repeat center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .message {
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+
+        .wrong {
+            color: red;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .food {
+                width: 30vw;
+                max-width: 140px;
+            }
+
+            .plate {
+                width: 90vw;
+                max-width: 350px;
+                height: 45vw;
+                max-height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .food-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .food {
+                width: 40vw;
+                max-width: 120px;
+            }
+
+            .plate {
+                width: 95vw;
+                max-width: 320px;
+                height: 50vw;
+                max-height: 160px;
+            }
+
+            #food-name {
+                font-size: 1.2rem;
+            }
+
+            .message {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Drag the correct food to the plate</h2>
+    
+    <div class="food-container">
+        <img src="https://img-cdn.thepublive.com/filters:format(webp)/local-samosal/media/media_files/HrQaDQk5NaKjRawunHIx.png" id="Rasogola" class="food" draggable="true">
+        <img src="https://www.sharmispassions.com/wp-content/uploads/2019/06/raggi-mudde-step17.jpg" id="raggi-mudde" class="food" draggable="true">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR10O7Fek8vzKv6_lNy_YEasavaPAd0Hab-uA&s" id="Mysore Pak" class="food" draggable="true">
+        <img src="https://i3.wp.com/www.thetalentedindian.com/wp-content/uploads/2023/01/Pakhala.jpeg" id="pakhala" class="food" draggable="true">
+        <img src="https://www.balancenutrition.in/images/receipe-img/1537555626_large.jpg" id="Puliogire" class="food" draggable="true">
+    </div>
+    
+    <div class="plate-container">
+        <p id="food-name"></p>
+        <div class="plate" id="plate"></div>
+    </div>
+
+    <p class="message" id="message"></p>
+
+    <div id="completionScreen" style="display: none; flex-direction: column; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); color: white; text-align: center; z-index: 1000;">
+        <h1 style="font-size: 36px; font-weight: bold; color: #ff6600; text-shadow: 2px 2px 8px rgba(0,0,0,0.2);">
+            🎉 Congratulations! 🎉 <br> You successfully completed Level 2!
+        </h1>
+        <img src="https://media.giphy.com/media/26AHONQ79FdWZhAI0/giphy.gif" width="200px">
+        <br>
+        <button onclick="goToLevel3()" style="font-size: 20px; padding: 10px 20px; background: #ed8004; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">Go to Level 3 →</button>
+    </div>
+    
+
+
+    <script>
+
+        let foods = document.querySelectorAll('.food');
+let plate = document.getElementById('plate');
+let message = document.getElementById('message');
+let foodNameText = document.getElementById('food-name');
+
+let foodList = [
+    { name: "Pakhala", id: "pakhala" },
+    { name: "Raggi Mudde", id: "raggi-mudde" },
+    { name: "Rasogola", id: "Rasogola" },
+    { name: "Puliogire", id: "Puliogire" },
+    { name: "Mysore Pak", id: "Mysore Pak" }
+];
+
+foodList = foodList.sort(() => Math.random() - 0.5);
+
+let currentIndex = 0;
+
+function showNextFood() {
+    if (currentIndex < foodList.length) {
+    foodNameText.innerText = "Place: " + foodList[currentIndex].name;
+    message.innerText = "";
+} else {
+    completeLevel2(); // Call function to show completion screen
+}
+
+}
+
+// Drag & Drop for Desktop
+foods.forEach(food => {
+    food.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text', e.target.id);
+    });
+});
+
+plate.addEventListener('dragover', (e) => {
+    e.preventDefault();
+});
+
+plate.addEventListener('drop', (e) => {
+    e.preventDefault();
+    let foodId = e.dataTransfer.getData('text');
+    checkFoodPlacement(foodId);
+});
+
+// Touch Event Handling for Mobile
+foods.forEach(food => {
+    food.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        let touch = e.touches[0];
+        food.dataset.touchX = touch.clientX;
+        food.dataset.touchY = touch.clientY;
+    });
+
+    food.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        let touch = e.touches[0];
+        let offsetX = touch.clientX - food.dataset.touchX;
+        let offsetY = touch.clientY - food.dataset.touchY;
+
+        food.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    });
+
+    food.addEventListener('touchend', (e) => {
+        let touch = e.changedTouches[0];
+        let plateRect = plate.getBoundingClientRect();
+        let foodRect = food.getBoundingClientRect();
+
+        if (
+            foodRect.left >= plateRect.left &&
+            foodRect.right <= plateRect.right &&
+            foodRect.top >= plateRect.top &&
+            foodRect.bottom <= plateRect.bottom
+        ) {
+            checkFoodPlacement(food.id);
+        }
+        food.style.transform = ""; // Reset position
+    });
+});
+
+function checkFoodPlacement(foodId) {
+    let draggedFood = document.getElementById(foodId);
+    
+    if (foodId === foodList[currentIndex].id) {
+        plate.appendChild(draggedFood);
+        draggedFood.style.position = "absolute";
+        draggedFood.style.width = "15vw";
+        draggedFood.style.maxWidth = "100px";
+        draggedFood.style.height = "auto";
+        message.innerHTML = "✅ Correct!";
+        message.className = "message correct";
+        currentIndex++;
+        setTimeout(showNextFood, 1000);
+    } else {
+        message.innerHTML = "❌ Wrong! Try Again!";
+        message.className = "message wrong";
+    }
+}
+
+function completeLevel2() {
+    document.body.style.overflow = "hidden"; // Prevent scrolling
+    document.getElementById("completionScreen").style.display = "flex"; // Show completion screen
+}
+
+function goToLevel3() {
+    window.location.href = "level3.html"; // Redirect to Level 3
+}
+
+
+showNextFood();
+
+    </script>
+
+</body>
+</html>

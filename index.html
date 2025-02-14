@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1 - MCQ Quiz</title>
+    <style>
+ body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: white; /* Ensures text is white */
+    background-image: url('https://t3.ftcdn.net/jpg/02/97/67/70/360_F_297677001_zX7ZzRq8DObUV5IWTHAIhAae6DuiEQh4.jpg'); /* Replace with your image path */
+    background-size: cover; /* Makes the image cover the full page */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents repeating */
+    height: 100vh; /* Ensures full height */
+    margin: 0; /* Removes default margins */
+}
+
+
+h1 {
+    color: rgb(245, 3, 15); /* Ensures the quiz title is white */
+}
+
+.question-container h2 {
+    color: rgb(255, 255, 255); /* Text color */
+    background-color: rgba(0, 0, 0, 0.6); /* Background color (black with transparency) */
+    padding: 10px; /* Adds space around text */
+    border-radius: 10px; /* Rounds corners */
+    display: inline-block; /* Ensures the background fits the text width */
+}
+
+
+
+        .question-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, auto); /* Keeps two items per row */
+    gap: 10px; /* Reduces the space between images */
+    justify-content: center; /* Keeps them centered */
+    align-items: center;
+}
+
+
+.options button {
+    width: 220px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #00ffd5;
+    border: none; /* Removed border to avoid extra markings */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.options img {
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+
+
+        .message {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        .correct { color: green; }
+        .wrong { color: red; }
+        .hidden { display: none; }
+        .question-image {
+            width: 400px;
+            height: 300px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Level 1: MCQ Quiz</h1>
+    <div id="quiz-container"></div>
+    <p id="message" class="message"></p>
+
+    <script>
+                  const questions = [
+    {
+        question: "See Where is Sundal",
+        options: [
+            "a) https://i.pinimg.com/400x300/e0/e6/e1/e0e6e1d246bde8b4394ade262bdae43d.jpg",
+            "b) https://vegehomecooking.com/wp-content/uploads/2021/05/ChickpeaSundalFeaturedImage.jpg",
+            "c) https://cookingfromheart.com/wp-content/uploads/2019/04/Jigarthanda-5.jpg",
+            "d) https://miro.medium.com/v2/resize:fit:5384/1*4c-Hwli5REZcT5WYGgBZbg.jpeg"
+        ],
+        answer: "b) https://vegehomecooking.com/wp-content/uploads/2021/05/ChickpeaSundalFeaturedImage.jpg"
+    },
+    {
+        question: "Guess which food is this ?",
+        image: "https://i.pinimg.com/400x300/e0/e6/e1/e0e6e1d246bde8b4394ade262bdae43d.jpg",
+        options: [
+            "a) Raggi Mudde",
+            "b) Bajji",
+            "c) Idli",
+            "d) Vada"
+        ],
+        answer: "b) Bajji"
+    },
+    {
+        question: "Rava Kesari",
+        options: [
+            "a) https://www.vegrecipesofindia.com/wp-content/uploads/2021/06/kesari-recipe-1-500x500.jpg",
+            "b) https://www.ticklingpalates.com/wp-content/uploads/2012/01/Chakkarai252520Pongal_thumb25255B225255D-500x375.jpg",
+            "c) https://miro.medium.com/v2/resize:fit:5384/1*4c-Hwli5REZcT5WYGgBZbg.jpeg",
+            "d) https://static.toiimg.com/thumb/53870704.cms?width=1200&height=900"
+        ],
+        answer: "a) https://www.vegrecipesofindia.com/wp-content/uploads/2021/06/kesari-recipe-1-500x500.jpg"
+    },
+    {
+        question: "Do you know this ?",
+        image: "https://www.sailusfood.com/wp-content/uploads/2012/12/puttu-kadala-kerala-vegetarian-recipes.jpg",
+        options: [
+            "a) Raggi Mudde",
+            "b) Puttu with Kadala Curry",
+            "c) Idli",
+            "d) Vada"
+        ],
+        answer: "b) Puttu with Kadala Curry"
+    },
+    {
+        question: "Can you say which one is Curd Rice ?",
+        options: [
+            "a) https://lh3.ggpht.com/_OGMa3JuKVTk/TSPYqumFKcI/AAAAAAAAFJU/mRLqmfDpnaA/DSC_0083_thumb%5B10%5D.jpg?imgmax=800",
+            "b) https://www.kamalascorner.com/wp-content/uploads/2007/10/Tamarind-Rice.jpg?w=640",
+            "c) https://i.ytimg.com/vi/n-IFJ6t99F8/maxresdefault.jpg",
+            "d) https://static.toiimg.com/thumb/53870704.cms?width=1200&height=900"
+        ],
+        answer: "c) https://i.ytimg.com/vi/n-IFJ6t99F8/maxresdefault.jpg"
+    }
+];
+
+        let currentQuestion = 0;
+
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                document.body.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+                        <h1 style="font-size: 36px; font-weight: bold; color: #ff6600; text-shadow: 2px 2px 8px rgba(0,0,0,0.2);">
+                            🎉 Congratulations! 🎉 <br> You successfully completed Level 1!
+                        </h1>
+                        <img src="https://media.giphy.com/media/26AHONQ79FdWZhAI0/giphy.gif" width="200px">
+                        <br>
+                        <button onclick="goToLevel2()" style="background-color: #ff6600; color: white; font-size: 20px; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);">
+                            🚀 Go to Level 2 →
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const q = questions[currentQuestion];
+            let html = `<div class='question-container'><h2>${q.question}</h2>`;
+            
+            // Display question image if available
+            if (q.image) {
+                html += `<img src="${q.image}" class='question-image'>`;
+            }
+            
+            html += "<div class='options'>";
+            q.options.forEach(opt => {
+                const isImage = opt.includes("http");
+                if (isImage) {
+                    html += `<button onclick='checkAnswer("${opt}")' style='background:none;'><img src="${opt.split(" ")[1]}"></button>`;
+                } else {
+                    html += `<button onclick='checkAnswer("${opt}")'>${opt}</button>`;
+                }
+            });
+            html += "</div></div><br>";
+            document.getElementById("quiz-container").innerHTML = html;
+        }
+
+        function checkAnswer(selectedOption) {
+            const correctAnswer = questions[currentQuestion].answer;
+            if (selectedOption === correctAnswer) {
+                document.getElementById("message").innerHTML = "✅ Correct!";
+                document.getElementById("message").className = "message correct";
+                setTimeout(() => {
+                    currentQuestion++;
+                    loadQuestion();
+                }, 1000);
+            } else {
+                document.getElementById("message").innerHTML = "❌ Wrong! Try again.";
+                document.getElementById("message").className = "message wrong";
+            }
+        }
+
+        function goToLevel2() {
+            window.location.href = "level2.html";
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>

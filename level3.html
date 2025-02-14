@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 3 - Connect the Food</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f8f8;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+            margin-top: 50px;
+        }
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .item {
+            padding: 12px;
+            background-color: lightblue;
+            border-radius: 5px;
+            cursor: grab;
+            font-size: 18px;
+            font-weight: bold;
+            width: 147px;
+            text-align: center;
+            border: 2px solid #000;
+            margin-bottom: 12px;
+        }
+        .image-box {
+            width: 110px;
+            height: 55px;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #000;
+            border-radius: 10px;
+            position: relative;
+            margin-bottom: -19px;
+            margin-top: -10px;
+        }
+        .drop-box {
+            width: 110px;
+            height: 30px;
+            background-color: white;
+            border: 2px solid black;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-top: 0px;
+            font-size: 10px;
+        }
+        #result {
+            font-size: 20px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #columnA{
+            margin-top: 40px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <h1>Level 3: Match the Food Name to Its Image</h1>
+    <p>Drag the correct food name and place it under the matching image.</p>
+    <div class="container">
+        <div class="column" id="columnA">
+            <div class="item" draggable="true" id="food4" data-match="img4">Sushi</div>
+            <div class="item" draggable="true" id="food2" data-match="img2">Burger</div>
+            <div class="item" draggable="true" id="food3" data-match="img3">Pasta</div>
+            <div class="item" draggable="true" id="food1" data-match="img1">Pizza</div>
+            <div class="item" draggable="true" id="food5" data-match="img5">Ice Cream</div>
+            
+            
+        </div>
+        <div class="column" id="columnB">
+            <div class="image-box" id="img1" style="background-image: url('https://contentoitaliano.com/wp-content/uploads/2022/01/Cheese-and-vegetables-pizza.jpg');"></div>
+            <div class="drop-box" id="drop1">Place the correct text</div>
+            
+            <div class="image-box" id="img2" style="background-image: url('https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/M6HASPARCZHYNN4XTUYT7H6PTE.jpg&w=1600&h=900');"></div>
+            <div class="drop-box" id="drop2">Place the correct text</div>
+            
+            <div class="image-box" id="img3" style="background-image: url('https://media.istockphoto.com/id/155433174/photo/bolognese-pens.jpg?s=612x612&w=0&k=20&c=A_TBqOAzcOkKbeVv8qSDs0bukfAedhkA458JEFolo_M=');"></div>
+            <div class="drop-box" id="drop3">Place the correct text</div>
+            
+            <div class="image-box" id="img4" style="background-image: url('https://cdn.britannica.com/52/128652-050-14AD19CA/Maki-zushi.jpg');"></div>
+            <div class="drop-box" id="drop4">Place the correct text</div>
+            
+            <div class="image-box" id="img5" style="background-image: url('https://static.toiimg.com/thumb/msid-112019658,width-1280,height-720,resizemode-4/112019658.jpg');"></div>
+            <div class="drop-box" id="drop5">Place the correct text</div>
+        </div>
+    </div>
+    <p id="result"></p>
+
+    <script>
+        document.querySelectorAll(".item").forEach(item => {
+            item.addEventListener("dragstart", (e) => {
+                e.dataTransfer.setData("text", e.target.id);
+            });
+        });
+
+      
+
+
+        document.querySelectorAll(".drop-box").forEach(box => {
+            box.addEventListener("dragover", (e) => e.preventDefault());
+            box.addEventListener("drop", (e) => {
+                e.preventDefault();
+                let itemId = e.dataTransfer.getData("text");
+                let draggedItem = document.getElementById(itemId);
+                let correctMatch = draggedItem.dataset.match.replace("img", "drop");
+                
+                if (e.target.id === correctMatch) {
+                    e.target.innerText = draggedItem.innerText;
+                    e.target.style.backgroundColor = "lightgreen";
+                    draggedItem.style.display = "none";
+                    checkCompletion();
+                } else {
+                    document.getElementById("result").innerText = "Wrong! Try again.";
+                    document.getElementById("result").style.color = "red";
+                }
+            });
+        });
+
+        function checkCompletion() {
+            let allPlaced = true;
+            document.querySelectorAll(".drop-box").forEach(box => {
+                if (box.innerText === "Place the correct text") {
+                    allPlaced = false;
+                }
+            });
+            if (allPlaced) {
+                document.getElementById("result").innerText = "Congratulations! You matched all correctly!";
+                document.getElementById("result").style.color = "green";
+            }
+        }
+    </script>
+</body>
+</html>
